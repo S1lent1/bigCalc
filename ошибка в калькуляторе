@@ -1,0 +1,49 @@
+   // ArrayList = ("5", "+", "5", "x", "5") - передается в метод
+   
+   public static float answer(ArrayList<String> input) {
+
+        int index = -2;
+        float answer = -112233;
+        float number1 = 0;
+        float number2 = 0;
+
+//       после вычислений останется 1 число в input, которое мы и вычитаем в while, чтобы цикл прекратился
+        while ((input.size()-1) != 0) {
+
+//      сначала надо найти знаки х и /, для соблюдения порядка
+            if(input.contains("/") || input.contains("x")){
+                index = switch (input.indexOf("/")){
+                    case -1 -> input.indexOf("x");
+                    default -> input.indexOf("/");
+                };
+            }else {
+//      затем, когда знаки * и / закончились, переходим к + и -
+                index = switch (input.indexOf("-")){
+                    case -1 -> input.indexOf("+");
+                    default -> input.indexOf("-");
+                };
+            }
+// числа справа и слева от операции
+            number1 = Float.parseFloat(input.get(index - 1));
+            number2 = Float.parseFloat(input.get(index + 1));
+
+            answer = switch (input.get(index)){
+                case "/" -> number1 / number2;
+                case "x" -> number1 * number2;
+                case "-" -> number1 - number2;
+                case "+" -> number1 + number2;
+                default -> index;
+            };
+ // массив будет выглядеть так: ("5", "+", "5", "25.0","x", "5")
+            input.add(index, String.valueOf(answer));
+// index будет равен 3
+            input.remove(input.get(index - 1));
+            // ("+", "5", "25.0", "x", "5")
+            input.remove(input.get(index));
+            // ("+", "5", "25.0", "5")
+            input.remove(input.get(index));
+            // ( "+", "25.0", "5")
+
+        }
+        return answer;
+    }
